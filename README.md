@@ -1,5 +1,5 @@
 # Poetry Analyser
-### by [Jitkapat](github.com/jitkapat)
+### by Jitkapat
 
 
 ## ที่มาและความสำคัญ
