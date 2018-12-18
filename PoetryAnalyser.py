@@ -78,6 +78,9 @@ class Poetry:
         pass
 
     def if_rhyme(self, word1, word2):
+        """
+        checks whether word1 and word2 rhymes
+        """
         word1 = Word(word1, self.dict)
         word2 = Word(word2, self.dict)
         if word1.final_syllable == word2.final_syllable:
@@ -86,6 +89,9 @@ class Poetry:
             return False
 
     def if_alliterate(self, word1, word2):
+        """
+        checks whether word1 and word2 alliterates
+        """
         word1 = Word(word1, self.dict)
         word2 = Word(word2, self.dict)
         if word1.first_phoneme == word2.first_phoneme:
@@ -109,7 +115,7 @@ class Line(Poetry):
 
     def get_words(self):
         """
-        tokenise inputted line with spacy and collect the tokens
+        tokenises inputted line with spacy and collect the tokens
         """
         tokenised_line = self.nlp(self.line)
         result = []
@@ -198,6 +204,7 @@ class Poem(Poetry):
         self.file.close()
 
     def get_lines(self):
+        "convert a single poem into lines"
         lines = []
         for line in self.file:
             if line != '\n':
@@ -205,6 +212,9 @@ class Poem(Poetry):
         return lines
 
     def get_metre(self):
+        """
+        retrieves the metre of each line and find the most common metre 
+        """
         metre_dict = {}
         for line in self.lines:
             metre_dict[line.metre] = 0
@@ -214,6 +224,9 @@ class Poem(Poetry):
         return result
 
     def get_rhyme_pattern(self):
+        """
+        checks the final syllable of each line and convert into rhyme patterns
+        """
         letter_list = 'A B C D E F G H J I K L M N O P Q R S T U V W X Y Z'.split(' ')
         letter_check = 'A B C D E F G H J I K L M N O P Q R S T U V W X Y Z'.split(' ')
         pattern_collection = [line for line in self.lines]
