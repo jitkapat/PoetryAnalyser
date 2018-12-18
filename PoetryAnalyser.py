@@ -34,9 +34,8 @@ def load_cmu_dict():
 # In most cases , please refer to the Poem class or the Analyse class.
 class Word:
     # A class for a single word in a poem
-    # For keeping information about a word that will be used to check meter, rhyme and any possible other features
-    def __init__(self, word, dict):
-        """"""
+    # For keeping information about a word that will be used to check metre, rhyme and any possible other features
+    def __init__(self, word, dict)
         self.word = str(word).upper()
         self.dict = dict
         self.phoneme = self.get_phoneme()
@@ -97,7 +96,7 @@ class Poetry:
 
 class Line(Poetry):
     # A class for a single line in a poem
-    # Contains data that will be used to analyse the poem's meter (single line's meter) and rhyme
+    # Contains data that will be used to analyse the poem's metre (single line's metre) and rhyme
     # Each word in the line will be collected using class Word
     def __init__(self, line, dict):
         self.nlp = spacy.load('en', disable=['parser', 'ner'])
@@ -105,10 +104,13 @@ class Line(Poetry):
         self.dict = dict
         self.words = self.get_words()
         self.stress_pattern = self.get_stress_pattern()
-        self.meter = self.get_meter()
+        self.metre = self.get_metre()
         self.final_word = str(self.words[-1])
 
     def get_words(self):
+        """
+        tokenise inputted line with spacy and collect the tokens
+        """
         tokenised_line = self.nlp(self.line)
         result = []
         for token in tokenised_line:
@@ -117,6 +119,9 @@ class Line(Poetry):
         return result
 
     def get_stress_pattern(self):
+        """
+        retrieves stress pattern data from Word class and combine each word into a pattern of a single line 
+        """
         result = []
         for word in self.words:
             word2 = Word(word, self.dict)
@@ -130,13 +135,16 @@ class Line(Poetry):
             result += adjusted_stress_pattern
         return result
 
-    def get_meter(self):
+    def get_metre(self):
+        """
+        uses stress pattern of the line and convert it into recognised metres
+        """
         result = []
         syllable = len(self.stress_pattern)
         num_to_name = {1: "mono", 2: "di", 3: "tri",
                        4: "tetra", 5: "penta", 6: "hexa",
                        7: "hepta", 8: "octa"}
-        foot_to_meter = {'01': 'iambic ', '10': 'trochaic ', '11': 'spondaic ',
+        foot_to_metre = {'01': 'iambic ', '10': 'trochaic ', '11': 'spondaic ',
                          '00': 'unknown ', '100': 'dactylic', '001': 'anapestic ',
                          '101': 'unknown ', '110': 'unknown ', '011': 'unknown ',
                          '010': 'unknown ', '000': 'unknown '}
@@ -145,13 +153,13 @@ class Line(Poetry):
             foot_type = {}
             for i in range(0, syllable, 2):
                 current_foot = ''.join([str(self.stress_pattern[i]), str(self.stress_pattern[i+1])])
-                foot_type[foot_to_meter[current_foot]] = 0
+                foot_type[foot_to_metre[current_foot]] = 0
             for i in range(0, syllable, 2):
                 current_foot = ''.join([str(self.stress_pattern[i]), str(self.stress_pattern[i + 1])])
-                foot_type[foot_to_meter[current_foot]] += 1
+                foot_type[foot_to_metre[current_foot]] += 1
             result_foot = list(foot_type)[0]
-            meter = result_foot+num_to_name[round(syllable/2)]+'meter'
-            result.append(meter)
+            metre = result_foot+num_to_name[round(syllable/2)]+'metre'
+            result.append(metre)
 
         if syllable % 3 == 0:
             foot_type = {}
@@ -159,19 +167,19 @@ class Line(Poetry):
                 current_foot = ''.join([str(self.stress_pattern[i]),
                                         str(self.stress_pattern[i + 1]),
                                         str(self.stress_pattern[i + 2])])
-                foot_type[foot_to_meter[current_foot]] = 0
+                foot_type[foot_to_metre[current_foot]] = 0
             for i in range(0, syllable, 3):
                 current_foot = ''.join([str(self.stress_pattern[i]),
                                         str(self.stress_pattern[i + 1]),
                                         str(self.stress_pattern[i + 2])])
-                foot_type[foot_to_meter[current_foot]] = 0
+                foot_type[foot_to_metre[current_foot]] = 0
             result_foot = list(foot_type)[0]
-            meter = result_foot + num_to_name[round(syllable / 2)] + 'meter'
-            result.append(meter)
+            metre = result_foot + num_to_name[round(syllable / 2)] + 'metre'
+            result.append(metre)
 
         else:
             if len(result) == 0:
-                result.append('free meter')
+                result.append('free metre')
         return result[0]
 
 
@@ -185,7 +193,7 @@ class Poem(Poetry):
         self.dict = dict
         self.lines = self.get_lines()
         self.line_num = len(self.lines)
-        self.meter = self.get_meter()
+        self.metre = self.get_metre()
         self.rhyme_pattern = self.get_rhyme_pattern()
         self.file.close()
 
@@ -196,13 +204,13 @@ class Poem(Poetry):
                 lines.append(Line(line.strip(), self.dict))
         return lines
 
-    def get_meter(self):
-        meter_dict = {}
+    def get_metre(self):
+        metre_dict = {}
         for line in self.lines:
-            meter_dict[line.meter] = 0
+            metre_dict[line.metre] = 0
         for line in self.lines:
-            meter_dict[line.meter] += 1
-        result = list(meter_dict)[0]
+            metre_dict[line.metre] += 1
+        result = list(metre_dict)[0]
         return result
 
     def get_rhyme_pattern(self):
@@ -230,7 +238,7 @@ class Analyse:
         self.poem = Poem(self.filename, self.dict)
         print(self.filename+'\n')
         print("This poem has {} lines".format(self.poem.line_num))
-        print("The poem's meter is " + self.poem.meter)
+        print("The poem's metre is " + self.poem.metre)
         print("The poem's rhyme pattern is " + self.poem.rhyme_pattern)
         print("\n")
 
