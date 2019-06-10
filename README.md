@@ -1,4 +1,4 @@
-# Poetry Analyser
+# Poetry Analyzer
 ### by Jitkapat
 
 
